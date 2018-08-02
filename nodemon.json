@@ -1,0 +1,6 @@
+{
+    "events": {
+        "restart": "npm run test:eslint",
+        "start": "npm run test:eslint"
+    }
+}
