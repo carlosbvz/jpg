@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/styles/custom.css">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
@@ -16,7 +19,6 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-
 
     <!-- Custom JS -->
     <script src="assets/scripts/data.js" defer></script>
@@ -35,7 +37,9 @@
         <div class="row">
             <!-- List -->
             <div class="col-md-4">
-                <p>Total Players: <span id="total-players">0</span></p>
+                <p>Total Players:
+                    <span id="total-players">0</span>
+                </p>
                 <div class="list-group" id="players-list">
                     <!-- Filled by js -->
                 </div>
@@ -43,8 +47,17 @@
 
             <!-- Teams/Results -->
             <div class="col-md-8">
-                <button type="button" class="btn btn-primary" id="generate-teams">Generate Teams</button>
-                <br /><br />
+                <button type="button" class="btn btn-secondary" id="generate-teams">Generate Teams</button>
+                <br />
+                <br />
+
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alert-players">
+                    <p class="plert-players-text"></p>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                
                 <div class="row">
                     <div class="col-md-6">
                         <h2>Team A</h2>

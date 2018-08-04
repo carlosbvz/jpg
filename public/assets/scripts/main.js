@@ -4,6 +4,7 @@ const Match = (() => {
   const $generateTeams = $("#generate-teams");
   const $teamAGrid = $("#team-A-grid");
   const $teamBGrid = $("#team-B-grid");
+  const $alertPlayers = $("#alert-players");
 
   let totalPlayers = [];
 
@@ -32,29 +33,41 @@ const Match = (() => {
   };
 
   const displayTeamsInUI = (teamA, teamB) => {
-    $teamAGrid.html('');
-    $teamBGrid.html('');
+    $teamAGrid.html("");
+    $teamBGrid.html("");
     teamA.playersData.forEach(player => {
-        $teamAGrid.append(`
+      $teamAGrid.append(`
             <p>${player.name}</p>
         `);
-    })
+    });
     teamB.playersData.forEach(player => {
-        $teamBGrid.append(`
+      $teamBGrid.append(`
             <p>${player.name}</p>
         `);
-    })
+    });
   };
+
+  const message = {
+    show(msg) {
+      $alertPlayers.find(".plert-players-text").html(msg);
+      $alertPlayers.show();
+    },
+    hide() {
+      $alertPlayers.hide();
+    }
+  }
 
   const createTeams = () => {
     const teamsPerMatchCount = 2; // 2 teams per match
     const playersInMatch = totalPlayers;
     const matchSize = playersInMatch.length;
-
     const teamSize = matchSize / 2;
     const teamInput = getInputArrayFromInt(matchSize);
 
-    if (isEven(matchSize)) {
+    let msg = "";
+    if (matchSize === 0) msg = "Please select an even number of players."; 
+    else if(isEven(matchSize) && matchSize > 12) msg = "We only support matches of 12 players maximum."; 
+    else if (isEven(matchSize)) {
       const teamsCombinationsArray = getCombinationIndexes(teamInput, teamSize);
       const teamsCombinationsCount = teamsCombinationsArray.length;
 
@@ -105,10 +118,11 @@ const Match = (() => {
       });
 
       displayTeamsInUI(bestMatch.teams.teamA, bestMatch.teams.teamB);
-
     } else {
-      console.log("Cannot play with an Odd number of players: ", matchSize);
+      msg = `Cannot play with an Odd number of players: ${matchSize}`;
     }
+    if (msg) message.show(msg)
+    else message.hide();
   };
 
   const bindEvents = () => {
