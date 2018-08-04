@@ -7,7 +7,6 @@
 creative
 bower_components/
 node_modules/
-public/
 *.un~
 .idea
 .eslintcache
