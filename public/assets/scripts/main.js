@@ -10,7 +10,8 @@ const Match = (() => {
 
   const init = () => {
     // playersData is a global variable (json Data) coming from the data.js file
-    displayPlayers(playersData);
+    
+    displayPlayers(playersData.sort((a, b) => {return b.score - a.score}));
     bindEvents();
     // createTeams();
   };
@@ -55,7 +56,7 @@ const Match = (() => {
     hide() {
       $alertPlayers.hide();
     }
-  }
+  };
 
   const createTeams = () => {
     const teamsPerMatchCount = 2; // 2 teams per match
@@ -65,8 +66,9 @@ const Match = (() => {
     const teamInput = getInputArrayFromInt(matchSize);
 
     let msg = "";
-    if (matchSize === 0) msg = "Please select an even number of players."; 
-    else if(isEven(matchSize) && matchSize > 12) msg = "We only support matches of 12 players maximum."; 
+    if (matchSize === 0) msg = "Please select an even number of players.";
+    else if (isEven(matchSize) && matchSize > 12)
+      msg = "We only support matches of 12 players maximum.";
     else if (isEven(matchSize)) {
       const teamsCombinationsArray = getCombinationIndexes(teamInput, teamSize);
       const teamsCombinationsCount = teamsCombinationsArray.length;
@@ -121,7 +123,7 @@ const Match = (() => {
     } else {
       msg = `Cannot play with an Odd number of players: ${matchSize}`;
     }
-    if (msg) message.show(msg)
+    if (msg) message.show(msg);
     else message.hide();
   };
 

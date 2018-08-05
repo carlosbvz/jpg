@@ -2,86 +2,91 @@ const playersData = [
     {
         "id": 1,
         "name": "Melvin",
-        "score": "8.1666666666666661"
+        "score": 0
     },
     {
         "id": 2,
         "name": "Antony",
-        "score": "7.916666666666667"
+        "score": 2.313131313
     },
     {
         "id": 3,
         "name": "Andrey", 
-        "score": "7.333333333333333"
+        "score": 1.288770053
     },
     {
         "id": 4,
         "name": "Julio",
-        "score": "7.25"
+        "score": 3.859848485
     },
     {
         "id": 5,
         "name": "JPG",
-        "score": "7.166666666666667"
+        "score": 0
     },
     {
         "id": 6,
         "name": "Charlie",
-        "score": "6.8666666666666671"
+        "score": 2.7
     },
     {
         "id": 7,
         "name": "Sig",
-        "score": "6.8"
+        "score": 1.988770053
     },
     {
         "id": 8,
         "name": "Solo",
-        "score": "6.75"
+        "score": 3.013131313
     },
     {
         "id": 9,
         "name": "Sergio (Don Papi)",
-        "score": "6.666666666666667"
+        "score": 1.928571429
     },
     {
         "id": 10,
         "name": "Victor",
-        "score": "6.666666666666667"
+        "score": 1.387254902
     },
     {
         "id": 11,
         "name": "Castellón",
-        "score": "6.5333333333333341"
+        "score": 2.916666667
     },
     {
         "id": 12,
         "name": "Alvaro",
-        "score": "6.2"
+        "score": 1.387254902
     },
     {
         "id": 13,
-        "name": "Marito",
-        "score": "6.0666666666666664"
+        "name": "Mario",
+        "score": 1.2
     },
     {
         "id": 14,
         "name": "Mejías",
-        "score": "5.75"
+        "score": 0.9166666667
     },
     {
         "id": 15,
         "name": "Sergio",
-        "score": "5.2222222222222214"
+        "score": 2.609477124
     },
     {
         "id": 16,
         "name": "Alemán",
-        "score": "4.8888888888888884"
+        "score": 4.609090909
     },
     {
         "id": 17,
-        "name": "Solo2",
-        "score": "3.8333333333333335"
+        "name": "Esteban",
+        "score": 3.150793651
+    },
+    {
+        "id": 18,
+        "name": "Demian",
+        "score": 1.722222222
     }
 ]
