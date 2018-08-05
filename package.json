@@ -6,13 +6,17 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon -e \"js hbs json\" --inspect index.js",
+    "build": "webpack --config webpack.config.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:eslint": "./node_modules/.bin/eslint . --ext .js --cache || exit 0"
+    "test:eslint": "eslint . --ext .js --cache || exit 0"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^5.2.6"
   },
   "devDependencies": {
     "eslint": "^5.2.0",
