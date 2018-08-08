@@ -4,7 +4,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const handlebars = require('express-handlebars');
-const handlebarsHelpers = require('./core/utils/handlebarsHelpers');
 const contentRouter = require('./core/routes/contentRouter');
 const playersRouter = require('./core/routes/playersRouter');
 const assetsRouter = require('./core/routes/assetsRouter');
@@ -21,8 +20,7 @@ const handlebarsEngine = handlebars.create({
     defaultLayout: 'main',
     extname: '.hbs',
     layoutsDir: path.join(__dirname, 'app', 'layouts'),
-    partialsDir: path.join(__dirname, 'app', 'components'),
-    helpers: handlebarsHelpers
+    partialsDir: path.join(__dirname, 'app', 'components')
 }).engine;
 
 app.engine('.hbs', handlebarsEngine);
