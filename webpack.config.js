@@ -8,23 +8,15 @@ const config = {
 
     entry: {
         main: [
-            'webpack-hot-middleware/client?reload=true&noInfo=true',
-            path.join(__dirname, '/app/main.ts')
-        ],
-        angular: [
-            'webpack-hot-middleware/client?reload=true&noInfo=true',
-            './app/index.ts'
-        ],
-        polyfills: [
-            'webpack-hot-middleware/client?reload=true&noInfo=true',
-            './app/polyfills.ts'
+            'webpack-hot-middleware/client?reload=true',
+            './app/index'
         ]
     },
 
     output: {
         path: '/',
         filename: '[name].js',
-        publicPath: 'http://localhost:8000/assets/scripts'
+        publicPath: 'http://localhost:3000/assets/scripts'
     },
 
     devtool: '#eval',
@@ -55,7 +47,7 @@ const config = {
     ],
 
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.js'],
         modules: ['./app', 'node_modules']
     },
 

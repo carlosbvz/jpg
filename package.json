@@ -19,12 +19,27 @@
     "mongoose": "^5.2.6"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^4.5.2",
+    "css-loader": "^1.0.0",
     "eslint": "^5.2.0",
     "eslint-config-standard": "^12.0.0-alpha.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
-    "nodemon": "^1.18.3"
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-loader": "^0.5.5",
+    "jquery": "^3.3.1",
+    "node-sass": "^4.9.2",
+    "nodemon": "^1.18.3",
+    "sass-loader": "^7.1.0",
+    "short-id": "0.1.0-1",
+    "style-loader": "^0.22.1",
+    "url-loader": "^1.0.1",
+    "webpack": "^3.8.1",
+    "webpack-bundle-analyzer": "2.8.2",
+    "webpack-dev-middleware": "1.12.0",
+    "webpack-hot-middleware": "2.20.0",
+    "webpack-version-file": "^0.1.3"
   }
 }

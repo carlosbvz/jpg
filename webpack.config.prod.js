@@ -13,9 +13,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const config = {
 
     entry: {
-        main: './app/index.ts',
-        angular: './app/main.aot.ts',
-        polyfills: './app/polyfills.ts'
+        main: './app/index.js',
     },
 
     output: {

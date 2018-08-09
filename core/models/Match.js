@@ -4,15 +4,20 @@ const mongoose = require('mongoose');
  * Player schema
  */
 const playerSchema = new mongoose.Schema({
-    name: {
+    date: {
         type: String,
         required: true
     },
-    nickname: {
-        type: String,
-        required: true
-    },
-    rating: Number,
+    teams: [
+        {
+            players: [
+                {
+                    id: String
+                }
+            ],
+            score: Number
+        }
+    ],
     updated_at: { type: Date, default: Date.now }
 });
 

@@ -30,7 +30,12 @@ app.set('views', path.join(__dirname, 'app'));
 app.set('view engine', '.hbs');
 
 app.use(bodyParser.json());
-// app.use(express.static('public'));
+
+// Environment configuration
+const environment = process.env.NODE_ENV || 'local';
+if (environment === 'local') {
+    require('./webpack.middleware.js').useWebpackMiddleware(app); // Load webpack only in local env
+}
 
 app.use('/assets', assetsRouter);
 app.use('/players', playersRouter);
