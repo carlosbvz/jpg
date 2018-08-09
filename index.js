@@ -32,9 +32,9 @@ app.set('view engine', '.hbs');
 app.use(bodyParser.json());
 
 // Environment configuration
-const environment = process.env.NODE_ENV || 'local';
+const environment = process.env.NODE_ENV;
 if (environment === 'local') {
-    require('./webpack.middleware.js').useWebpackMiddleware(app); // Load webpack only in local env
+    require('./webpack.middleware.js').useWebpackMiddleware(app);
 }
 
 app.use('/assets', assetsRouter);

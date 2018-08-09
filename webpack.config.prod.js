@@ -13,7 +13,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const config = {
 
     entry: {
-        main: './app/index.js',
+        main: './app/index.js'
     },
 
     output: {
@@ -56,10 +56,10 @@ const config = {
         }),
         new ExtractTextPlugin('../styles/[name].css'),
         new webpack.optimize.ModuleConcatenationPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: { warnings: false },
-            output: { comments: false }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compress: { warnings: false },
+        //     output: { comments: false }
+        // }),
         new CopyWebpackPlugin([{
             context: './app/assets/images',
             from: '**/*',

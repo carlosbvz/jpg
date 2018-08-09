@@ -21,6 +21,7 @@
   "devDependencies": {
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
+    "cssnano": "^4.0.5",
     "eslint": "^5.2.0",
     "eslint-config-standard": "^12.0.0-alpha.0",
     "eslint-plugin-import": "^2.13.0",
@@ -32,6 +33,7 @@
     "jquery": "^3.3.1",
     "node-sass": "^4.9.2",
     "nodemon": "^1.18.3",
+    "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "short-id": "0.1.0-1",
     "style-loader": "^0.22.1",

@@ -8,7 +8,7 @@ const webpackconfig = require('./webpack.config.js');
 var useWebpackMiddleware = (app) => {
     const webpackcompiler = webpack(webpackconfig);
 
-    //Dev server (watch)
+    // Dev server (watch)
     app.use(webpackDevMiddleware(webpackcompiler, {
         publicPath: webpackconfig.output.publicPath,
         mode: 'development',
@@ -20,7 +20,7 @@ var useWebpackMiddleware = (app) => {
         headers: { 'Access-Control-Allow-Origin': '*' }
     }));
 
-    //Hot reload
+    // Hot reload
     app.use(webpackHotMiddleware(webpackcompiler, {
         log: console.log
     }));
