@@ -88,5 +88,20 @@ const playersData = [
         "id": 18,
         "name": "Demian",
         "score": 1.722222222
+    },
+    {
+        "id": 19,
+        "name": "Steven",
+        "score": 0
+    },
+    {
+        "id": 20,
+        "name": "Leo",
+        "score": 0
+    },
+    {
+        "id": 21,
+        "name": "Agosto",
+        "score": 0
     }
 ]
