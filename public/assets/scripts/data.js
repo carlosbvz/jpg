@@ -103,5 +103,20 @@ const playersData = [
         "id": 21,
         "name": "Agosto",
         "score": 0
+    },
+    {
+        "id": 22,
+        "name": "JSON",
+        "score": 0
+    },
+    {
+        "id": 23,
+        "name": "Osvaldo",
+        "score": 0
+    },
+    {
+        "id": 24,
+        "name": "Giovanny",
+        "score": 0
     }
 ]
