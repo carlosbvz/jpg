@@ -72,7 +72,7 @@ const playersData = [
     {
         "id": 15,
         "name": "Sergio",
-        "score": 3831699346
+        "score": 3.831699346
     },
     {
         "id": 16,
