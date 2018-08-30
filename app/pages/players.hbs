@@ -1,0 +1,14 @@
+<h1>Players maintenance </h1>
+
+<a href="/playersTool/add">Add new player</a>
+
+<br>
+<br>
+<br>
+<h2>Players list</h2>
+
+<ul>
+    {{#each this.players}}
+        <li>{{this.name}} <a href="/playersTool/edit/{{this._id}}">Edit</a> <a href="/playersTool/delete/{{this._id}}">Delete</a></li>
+    {{/each}}
+</ul>

@@ -1,6 +1,10 @@
 <h1>Mejengas</h1>
 <br />
 
+
+
+
+
 <div class="row">
     <!-- List -->
     <div class="col-md-4">
@@ -8,7 +12,9 @@
             <span id="total-players">0</span>
         </p>
         <div class="list-group" id="players-list">
-            <!-- Filled by js -->
+            {{#each this.players}}
+                <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-player" data-player-id="{{this._id}}">{{this.name}}<span class="badge badge-primary badge-pill">{{this.rating}}</span></a>
+            {{/each}}
         </div>
     </div>
 

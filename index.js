@@ -30,6 +30,7 @@ app.set('views', path.join(__dirname, 'app'));
 app.set('view engine', '.hbs');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Environment configuration
 const environment = process.env.NODE_ENV;

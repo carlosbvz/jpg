@@ -1,3 +1,7 @@
+import algorithm from '../scripts/util/algorithm';
+
+var playersData;
+
 const Match = (() => {
     const $playersList = $('#players-list');
     const $totalPlayersCountDisplay = $('#total-players');
@@ -10,21 +14,15 @@ const Match = (() => {
 
     const init = () => {
         // playersData is a global variable (json Data) coming from the data.js file
-
-        displayPlayers(playersData.sort((a, b) => { return b.score - a.score; }));
-        bindEvents();
-        // createTeams();
-    };
-
-    const displayPlayers = playersData => {
-        playersData.forEach(player => {
-            $playersList.append(getPlayerListItemSchema(player));
+        // displayPlayers(playersData.sort((a, b) => { return b.score - a.score; }));
+        $.ajax({
+            url: '/players',
+            method: 'GET'
+        })
+        .done((data) => {
+            playersData = data;
+            bindEvents();
         });
-    };
-
-    const getPlayerListItemSchema = playerData => {
-        return `<a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-player" data-player-id=${
-            playerData.id}>${playerData.name}<span class="badge badge-primary badge-pill">${roundToTwo(playerData.score)}</span></a>`;
     };
 
     const displayTeamsInUI = (teamA, teamB) => {
@@ -57,34 +55,35 @@ const Match = (() => {
         const playersInMatch = totalPlayers;
         const matchSize = playersInMatch.length;
         const teamSize = matchSize / 2;
-        const teamInput = getInputArrayFromInt(matchSize);
+
+        const teamInput = algorithm.getInputArrayFromInt(matchSize);
 
         let msg = '';
         if (matchSize === 0) msg = 'Please select an even number of players.';
-        else if (isEven(matchSize) && matchSize > 12) {
+        else if (algorithm.isEven(matchSize) && matchSize > 12) {
             msg = 'We only support matches of 12 players maximum.';
-        } else if (isEven(matchSize)) {
-            const teamsCombinationsArray = getCombinationIndexes(teamInput, teamSize);
+        } else if (algorithm.isEven(matchSize)) {
+            const teamsCombinationsArray = algorithm.getCombinationIndexes(teamInput, teamSize);
             const teamsCombinationsCount = teamsCombinationsArray.length;
 
-            const matchInput = getInputArrayFromInt(teamsCombinationsCount);
-            const matchCombinationsArray = getCombinationIndexes(
+            const matchInput = algorithm.getInputArrayFromInt(teamsCombinationsCount);
+            const matchCombinationsArray = algorithm.getCombinationIndexes(
                 matchInput,
                 teamsPerMatchCount
             );
 
-            const validMatches = getValidMatches(
+            const validMatches = algorithm.getValidMatches(
                 matchCombinationsArray,
                 teamsCombinationsArray
             );
 
             let bestMatch = {};
             validMatches.forEach(teams => {
-                const pointsTeamA = getAllPointsInTeam(
+                const pointsTeamA = algorithm.getAllPointsInTeam(
                     teamsCombinationsArray[teams[0]],
                     playersInMatch
                 );
-                const pointsTeamB = getAllPointsInTeam(
+                const pointsTeamB = algorithm.getAllPointsInTeam(
                     teamsCombinationsArray[teams[1]],
                     playersInMatch
                 );
