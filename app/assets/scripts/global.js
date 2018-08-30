@@ -13,8 +13,6 @@ const Match = (() => {
   let totalPlayers = [];
 
   const init = () => {
-    // playersData is a global variable (json Data) coming from the data.js file
-    // displayPlayers(playersData.sort((a, b) => { return b.score - a.score; }));
     $.ajax({
       url: '/players',
       method: 'GET'

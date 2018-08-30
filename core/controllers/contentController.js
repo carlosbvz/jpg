@@ -1,9 +1,12 @@
 const contentService = require('../services/contentService');
 const config = require('../config/local.json');
+const playersHelper = require('../utils/playersHelper');
 
 const renderPage = (req, res) => {
     contentService.getAllPlayers(`${config.contentService.baseUrl}/players`)
-        .then(players => {
+        .then(playersData => {
+            let players = playersHelper.sortByRating(playersData);
+            players = playersHelper.roundRatingToTwo(players);
             res.render('../app/pages/home', { players });
         });
 };
