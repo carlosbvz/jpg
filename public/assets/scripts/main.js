@@ -10652,7 +10652,7 @@ const algorithm = (() => {
                 let i;
                 for (
                     i = sequenceLength - 1;
-                    i >= 0 && buffer[i] == input.length - sequenceLength + i;
+                    i >= 0 && buffer[i] === input.length - sequenceLength + i;
                     i--
                 );
                 if (i < 0) {
@@ -10684,12 +10684,12 @@ const algorithm = (() => {
         return totalPoints;
     };
 
-    const round = (decimals) => {
-        return (num) => parseFloat(num).toFixed(decimals);
-    };
+    // const round = (decimals) => {
+    //     return (num) => parseFloat(num).toFixed(decimals);
+    // };
 
-    const roundToTwo = round(2);
-    const roundToThree = round(3);
+    // const roundToTwo = round(2);
+    // const roundToThree = round(3);
     /**
      *
      * @param {Number} int
@@ -10723,7 +10723,6 @@ const algorithm = (() => {
         getInputArrayFromInt,
         getValidMatches
     };
-
 })();
 
 /* harmony default export */ __webpack_exports__["a"] = (algorithm);
@@ -10734,7 +10733,6 @@ const algorithm = (() => {
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {const addForm = (() => {
-
     const $playerAddForm = $('#playerAdd');
 
     const init = () => {
@@ -10743,11 +10741,10 @@ const algorithm = (() => {
 
     const formSubmit = () => {
         $playerAddForm.on('submit', (e) => {
-
             const nameVal = $playerAddForm.find('input[name="name"]').val();
             const nicknameVal = $playerAddForm.find('input[name="nickname"]').val();
 
-            if(nameVal && nicknameVal){
+            if (nameVal && nicknameVal) {
                 $.ajax({
                     url: '/players',
                     method: 'POST',
@@ -10757,20 +10754,19 @@ const algorithm = (() => {
                         rating: 0
                     }
                 })
-                .done(() => {
-                    window.location.href = '/playersTool';
-                });
+                    .done(() => {
+                        window.location.href = '/playersTool';
+                    });
             } else {
                 alert('All fields are required');
             }
             e.preventDefault();
-        })
+        });
     };
 
     return {
         init
     };
-
 })();
 
 addForm.init();
@@ -10782,32 +10778,29 @@ addForm.init();
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {const deleteForm = (() => {
-
     const $playerDeleteBtn = $('.playerDeleteBtn');
     const playerId = window.location.href.split('/delete/')[1];
 
     const init = () => {
-        eventHandlers()
+        eventHandlers();
     };
 
     const eventHandlers = () => {
         $playerDeleteBtn.on('click', (e) => {
-
             $.ajax({
                 url: '/players/' + playerId,
                 method: 'DELETE'
             })
-            .done(() => {
-                window.location.href = '/playersTool';
-            })
+                .done(() => {
+                    window.location.href = '/playersTool';
+                });
             e.preventDefault();
-        })
+        });
     };
 
     return {
         init
     };
-
 })();
 
 deleteForm.init();
@@ -10819,59 +10812,59 @@ deleteForm.init();
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {const editForm = (() => {
-  const $nameEditBtn = $('.nameEditBtn');
-  const $nicknameEditBtn = $('.nicknameEditBtn');
-  const $pointsEditBtn = $('.pointsEditBtn');
-  const playerId = window.location.href.split('edit/')[1];
+    const $nameEditBtn = $('.nameEditBtn');
+    const $nicknameEditBtn = $('.nicknameEditBtn');
+    const $pointsEditBtn = $('.pointsEditBtn');
+    const playerId = window.location.href.split('edit/')[1];
 
-  const init = () => {
-    eventHandlers();
-  };
+    const init = () => {
+        eventHandlers();
+    };
 
-  const eventHandlers = () => {
-    $nameEditBtn.on('click', e => {
-      $.ajax({
-        url: '/players/' + playerId,
-        method: 'PUT',
-        data: {
-          name: $nameEditBtn.prev().val()
-        }
-      }).done(() => {
-        window.location.href = '/playersTool';
-      });
-      e.preventDefault();
-    });
+    const eventHandlers = () => {
+        $nameEditBtn.on('click', e => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'PUT',
+                data: {
+                    name: $nameEditBtn.prev().val()
+                }
+            }).done(() => {
+                window.location.href = '/playersTool';
+            });
+            e.preventDefault();
+        });
 
-    $nicknameEditBtn.on('click', e => {
-      $.ajax({
-        url: '/players/' + playerId,
-        method: 'PUT',
-        data: {
-          nickname: $nicknameEditBtn.prev().val()
-        }
-      }).done(() => {
-        window.location.href = '/playersTool';
-      });
-      e.preventDefault();
-    });
+        $nicknameEditBtn.on('click', e => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'PUT',
+                data: {
+                    nickname: $nicknameEditBtn.prev().val()
+                }
+            }).done(() => {
+                window.location.href = '/playersTool';
+            });
+            e.preventDefault();
+        });
 
-    $pointsEditBtn.on('click', e => {
-      $.ajax({
-        url: '/players/' + playerId,
-        method: 'PUT',
-        data: {
-          rating: $pointsEditBtn.prev().val()
-        }
-      }).done(() => {
-        window.location.href = '/playersTool';
-      });
-      e.preventDefault();
-    });
-  };
+        $pointsEditBtn.on('click', e => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'PUT',
+                data: {
+                    rating: $pointsEditBtn.prev().val()
+                }
+            }).done(() => {
+                window.location.href = '/playersTool';
+            });
+            e.preventDefault();
+        });
+    };
 
-  return {
-    init
-  };
+    return {
+        init
+    };
 })();
 
 editForm.init();

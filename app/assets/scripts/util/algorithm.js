@@ -16,7 +16,7 @@ const algorithm = (() => {
                 let i;
                 for (
                     i = sequenceLength - 1;
-                    i >= 0 && buffer[i] == input.length - sequenceLength + i;
+                    i >= 0 && buffer[i] === input.length - sequenceLength + i;
                     i--
                 );
                 if (i < 0) {
@@ -48,12 +48,12 @@ const algorithm = (() => {
         return totalPoints;
     };
 
-    const round = (decimals) => {
-        return (num) => parseFloat(num).toFixed(decimals);
-    };
+    // const round = (decimals) => {
+    //     return (num) => parseFloat(num).toFixed(decimals);
+    // };
 
-    const roundToTwo = round(2);
-    const roundToThree = round(3);
+    // const roundToTwo = round(2);
+    // const roundToThree = round(3);
     /**
      *
      * @param {Number} int
@@ -87,7 +87,6 @@ const algorithm = (() => {
         getInputArrayFromInt,
         getValidMatches
     };
-
 })();
 
 export default algorithm;

@@ -8,7 +8,7 @@ const sortByRating = (playersData) => {
 
 const roundRatingToTwo = (playersData) => {
     return playersData.map(player => {
-        roundToTwo(player.rating) 
+        player.rating = roundToTwo(player.rating);
         return player;
     });
 };
@@ -18,7 +18,7 @@ const round = (decimals) => {
 };
 
 const roundToTwo = round(2);
-const roundToThree = round(3);
+// const roundToThree = round(3);
 
 module.exports = {
     sortByRating,
