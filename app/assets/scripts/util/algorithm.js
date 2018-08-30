@@ -1,17 +1,4 @@
 const algorithm = (() => {
-
-
-
-    // const getPlayersData = () => {
-    //     $.ajax({
-    //         url: '/players',
-    //         method: 'GET'
-    //     })
-    //     .done((data) => {
-    //         playersData = data;
-    //     });
-    // };
-
     const getSubset = (input, subset) => {
         const result = [];
         for (let i = 0; i < subset.length; i++) result[i] = input[subset[i]];
@@ -56,7 +43,7 @@ const algorithm = (() => {
     const getAllPointsInTeam = (playersArray, playersData) => {
         let totalPoints = 0;
         playersArray.forEach(playerIndex => {
-            totalPoints += parseFloat(playersData[playerIndex].score);
+            totalPoints += parseFloat(playersData[playerIndex].rating);
         });
         return totalPoints;
     };
