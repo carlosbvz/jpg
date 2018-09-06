@@ -1,8 +1,22 @@
+const Observables = require('../../assets/scripts/util/observables');
+
 const playersList = (() => {
 
     const $playersList = $('.playersList')
     const $playersListPanel = $playersList.find('#players-list-panel');
     const $totalPlayersCountDisplay = $playersList.find('#total-players');
+
+    const selectedPlayersData= {
+        data: {},
+        get() {
+            return Object.values(this.data);
+        },
+        toggle(playerData) {
+            const playersId = playerData._id;
+            if (this.data[playersId]) delete this.data[playersId];
+            else this.data[playersId] = playerData;
+        }
+    };
 
     const init = () => {
         eventHandlers();
@@ -11,33 +25,24 @@ const playersList = (() => {
     const eventHandlers = () => {
         $playersListPanel.find('.list-group-item-player').on('click', e => {
             const $selectedPlayer = $(e.currentTarget);
-            const selectedPlayerId = $selectedPlayer.data('player-id');
+            const selectedPlayerData = $selectedPlayer.data('player');
 
             updateUI($selectedPlayer);
-            
-            // const player = playersData.filter(player => player._id === playerID)[0];
-            // Removing
-            // if ($(e.currentTarget).hasClass('active')) {
-            //     $(e.currentTarget).removeClass('active');
-            //     totalPlayers = totalPlayers.filter(player => {
-            //         if (playerID !== player._id) return player;
-            //     });
-            //     // Adding
-            // } else {
-            //     $(e.currentTarget).addClass('active');
-            //     totalPlayers.push(player);
-            // }
-            // updateTotalPlayersCount();
+            selectedPlayersData.toggle(selectedPlayerData);
+
+            Observables.selectedPlayersData$.next(selectedPlayersData.get());
+
             e.preventDefault();
         });
     };
 
     const updateUI = ($selectedPlayer) => {
-        $selectedPlayer.toggleClass('active')
+        $selectedPlayer.toggleClass('active');
+        updateTotalPlayersCount($playersListPanel.find('.active').length );
     };
 
-    const updateTotalPlayersCount = () => {
-        // $totalPlayersCountDisplay.html(totalPlayers.length);
+    const updateTotalPlayersCount = (totalPlayers) => {
+        $totalPlayersCountDisplay.html(totalPlayers);
     };
 
     return {

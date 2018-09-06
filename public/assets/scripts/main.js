@@ -14814,7 +14814,7 @@ var zip_ZipBufferIterator = /*@__PURE__*/ (function (_super) {
 // CONCATENATED MODULE: ./app/assets/scripts/util/observables.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "level$", function() { return level$; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newGuestName$", function() { return newGuestName$; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "totalPlayers$", function() { return totalPlayers$; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectedPlayersData$", function() { return selectedPlayersData$; });
 
 
 
@@ -14825,7 +14825,7 @@ const level$ = new BehaviorSubject_BehaviorSubject(undefined);
 
 const newGuestName$ = new Subject_Subject();
 
-const totalPlayers$ = new BehaviorSubject_BehaviorSubject(undefined);
+const selectedPlayersData$ = new BehaviorSubject_BehaviorSubject(undefined);
 
 
 
@@ -14892,14 +14892,7 @@ const Match = (() => {
 
     const init = () => {
 
-        // TODO: Avoid this call and get data from markup since is already there form hbs/node
-        $.ajax({
-            url: '/players',
-            method: 'GET'
-        }).done(data => {
-            playersData = data;
-            eventHandlers();
-        });
+        eventHandlers();
     };
 
     const displayTeamsInUI = (teamA, teamB) => {
@@ -14931,7 +14924,7 @@ const Match = (() => {
 
         const matchLevel = Observables.level$.getValue();
         const teamsPerMatchCount = 2; // 2 teams per match
-        const playersInMatch = totalPlayers;
+        const playersInMatch = Observables.selectedPlayersData$.getValue(); //totalPlayers;
         const matchSize = playersInMatch.length;
         const teamSize = matchSize / 2;
 
@@ -15389,11 +15382,25 @@ addGuestForm.init();
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function($) {const playersList = (() => {
+/* WEBPACK VAR INJECTION */(function($) {const Observables = __webpack_require__(1);
+
+const playersList = (() => {
 
     const $playersList = $('.playersList')
     const $playersListPanel = $playersList.find('#players-list-panel');
     const $totalPlayersCountDisplay = $playersList.find('#total-players');
+
+    const selectedPlayersData= {
+        data: {},
+        get() {
+            return Object.values(this.data);
+        },
+        toggle(playerData) {
+            const playersId = playerData._id;
+            if (this.data[playersId]) delete this.data[playersId];
+            else this.data[playersId] = playerData;
+        }
+    };
 
     const init = () => {
         eventHandlers();
@@ -15402,33 +15409,24 @@ addGuestForm.init();
     const eventHandlers = () => {
         $playersListPanel.find('.list-group-item-player').on('click', e => {
             const $selectedPlayer = $(e.currentTarget);
-            const selectedPlayerId = $selectedPlayer.data('player-id');
+            const selectedPlayerData = $selectedPlayer.data('player');
 
             updateUI($selectedPlayer);
-            
-            // const player = playersData.filter(player => player._id === playerID)[0];
-            // Removing
-            // if ($(e.currentTarget).hasClass('active')) {
-            //     $(e.currentTarget).removeClass('active');
-            //     totalPlayers = totalPlayers.filter(player => {
-            //         if (playerID !== player._id) return player;
-            //     });
-            //     // Adding
-            // } else {
-            //     $(e.currentTarget).addClass('active');
-            //     totalPlayers.push(player);
-            // }
-            // updateTotalPlayersCount();
+            selectedPlayersData.toggle(selectedPlayerData);
+
+            Observables.selectedPlayersData$.next(selectedPlayersData.get());
+
             e.preventDefault();
         });
     };
 
     const updateUI = ($selectedPlayer) => {
-        $selectedPlayer.toggleClass('active')
+        $selectedPlayer.toggleClass('active');
+        updateTotalPlayersCount($playersListPanel.find('.active').length );
     };
 
-    const updateTotalPlayersCount = () => {
-        // $totalPlayersCountDisplay.html(totalPlayers.length);
+    const updateTotalPlayersCount = (totalPlayers) => {
+        $totalPlayersCountDisplay.html(totalPlayers);
     };
 
     return {

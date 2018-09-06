@@ -6,6 +6,11 @@ const log = (txt) => {
     console.log(txt);
 };
 
+const stringify = (objectData) => {
+    return JSON.stringify(objectData);
+};
+
 module.exports = {
-    log
+    log,
+    stringify
 };

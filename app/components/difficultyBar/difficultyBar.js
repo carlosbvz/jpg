@@ -1,4 +1,3 @@
-
 const Observables = require('../../assets/scripts/util/observables');
 
 const difficultyBar = (() => {

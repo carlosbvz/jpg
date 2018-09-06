@@ -8,10 +8,10 @@ const level$ = new BehaviorSubject(undefined);
 
 const newGuestName$ = new Subject();
 
-const totalPlayers$ = new BehaviorSubject(undefined);
+const selectedPlayersData$ = new BehaviorSubject(undefined);
 
 export {
     level$,
     newGuestName$,
-    totalPlayers$
+    selectedPlayersData$
 }

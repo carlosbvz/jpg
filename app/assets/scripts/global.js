@@ -17,14 +17,7 @@ const Match = (() => {
 
     const init = () => {
 
-        // TODO: Avoid this call and get data from markup since is already there form hbs/node
-        $.ajax({
-            url: '/players',
-            method: 'GET'
-        }).done(data => {
-            playersData = data;
-            eventHandlers();
-        });
+        eventHandlers();
     };
 
     const displayTeamsInUI = (teamA, teamB) => {
@@ -55,8 +48,9 @@ const Match = (() => {
     const createTeams = () => {
 
         const matchLevel = Observables.level$.getValue();
+        const playersInMatch = Observables.selectedPlayersData$.getValue(); //totalPlayers;
+        
         const teamsPerMatchCount = 2; // 2 teams per match
-        const playersInMatch = totalPlayers;
         const matchSize = playersInMatch.length;
         const teamSize = matchSize / 2;
 
