@@ -7,10 +7,18 @@ const difficultyBar = (() => {
   const $levelsBtns = $difficultyBar.find('button');
   const activeBtnCssClass = 'btn-secondary active';
   const defaultBtnCssClass = 'btn-light';
+  const defaultLevel = 'b'; // balanced
   
 
   const init = () => {
+    broadcastLevel( getDefaultLevel() );
     eventHandlers();
+  };
+
+  const getDefaultLevel = () => {
+    const activetLevel = $difficultyBar.find('.active').data('level');
+    if (activetLevel) return activetLevel;
+    else return defaultLevel;
   };
 
   const eventHandlers = () => {

@@ -1,8 +1,10 @@
-import algorithm from '../scripts/util/algorithm';
+const algorithm = require('./util/algorithm');
+const Observables = require('./util/observables');
 
 var playersData;
 
 const Match = (() => {
+
     const $playersList = $('#players-list');
     const $totalPlayersCountDisplay = $('#total-players');
     const $generateTeams = $('#generate-teams');
@@ -10,9 +12,14 @@ const Match = (() => {
     const $teamBGrid = $('#team-B-grid');
     const $alertPlayers = $('#alert-players');
 
+    const matchLevel = Observables.level$.getValue();
+
+
     let totalPlayers = [];
 
     const init = () => {
+
+        // TODO: Avoid this call and get data from markup since is already there form hbs/node
         $.ajax({
             url: '/players',
             method: 'GET'
@@ -48,6 +55,8 @@ const Match = (() => {
     };
 
     const createTeams = () => {
+
+        const matchLevel = Observables.level$.getValue();
         const teamsPerMatchCount = 2; // 2 teams per match
         const playersInMatch = totalPlayers;
         const matchSize = playersInMatch.length;
@@ -65,60 +74,102 @@ const Match = (() => {
                 teamSize
             );
             const teamsCombinationsCount = teamsCombinationsArray.length;
-
             const matchInput = algorithm.getInputArrayFromInt(teamsCombinationsCount);
             const matchCombinationsArray = algorithm.getCombinationIndexes(
                 matchInput,
                 teamsPerMatchCount
             );
-
-            const validMatches = algorithm.getValidMatches(
+            const validMatchesByTeamIndex = algorithm.getValidMatches(
                 matchCombinationsArray,
                 teamsCombinationsArray
             );
 
-            let bestMatch = {};
-            validMatches.forEach(teams => {
-                const pointsTeamA = algorithm.getAllPointsInTeam(
-                    teamsCombinationsArray[teams[0]],
-                    playersInMatch
-                );
-                const pointsTeamB = algorithm.getAllPointsInTeam(
-                    teamsCombinationsArray[teams[1]],
-                    playersInMatch
-                );
-                const difference = Math.abs(pointsTeamA - pointsTeamB);
-                if (!bestMatch.difference || bestMatch.difference > difference) {
-                    bestMatch.difference = difference;
-                    bestMatch.teams = {
-                        teamA: {
-                            playersIndexes: teamsCombinationsArray[teams[0]],
-                            points: pointsTeamA
-                        },
-                        teamB: {
-                            playersIndexes: teamsCombinationsArray[teams[1]],
-                            points: pointsTeamB
-                        }
-                    };
-                }
-            });
+            let bestMatch = '';
+            switch(matchLevel) {
+                case 'b': // balanced
+                    bestMatch = getBalancedMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
+                    break;
 
-            bestMatch.teams.teamA.playersData = [];
-            bestMatch.teams.teamB.playersData = [];
-            bestMatch.teams.teamA.playersIndexes.forEach(playerIndex => {
-                bestMatch.teams.teamA.playersData.push(playersInMatch[playerIndex]);
-            });
-            bestMatch.teams.teamB.playersIndexes.forEach(playerIndex => {
-                bestMatch.teams.teamB.playersData.push(playersInMatch[playerIndex]);
-            });
+                case 'r': // random
+                    bestMatch = getRandomMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
+                    break;
+            
+                default:
+                    break;
+            }
 
-            displayTeamsInUI(bestMatch.teams.teamA, bestMatch.teams.teamB);
+            if (bestMatch) displayTeamsInUI(bestMatch.teams.teamA, bestMatch.teams.teamB);
+            else alert('feature for this level not supported');
         } else {
             msg = `Cannot play with an Odd number of players: ${matchSize}`;
         }
         if (msg) message.show(msg);
         else message.hide();
     };
+
+    const getRandomMatch = (validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch) => {
+        const randomMatchTeams = validMatchesByTeamIndex[Math.floor(Math.random() * validMatchesByTeamIndex.length)];
+        const pointsTeamA = algorithm.getAllPointsInTeam(
+            teamsCombinationsArray[randomMatchTeams[0]],
+            playersInMatch
+        );
+        const pointsTeamB = algorithm.getAllPointsInTeam(
+            teamsCombinationsArray[randomMatchTeams[1]],
+            playersInMatch
+        );
+
+        let randomMatch = {};
+        randomMatch.teams = addTeamsDataToMatch(teamsCombinationsArray, randomMatchTeams, pointsTeamA, pointsTeamB, playersInMatch);
+        
+        return randomMatch;
+
+    }
+
+    const getBalancedMatch = (validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch) => {
+        // Find best (balanced) match
+        let bestMatch = {};
+        validMatchesByTeamIndex.forEach(teams => {
+            const pointsTeamA = algorithm.getAllPointsInTeam(
+                teamsCombinationsArray[teams[0]],
+                playersInMatch
+            );
+            const pointsTeamB = algorithm.getAllPointsInTeam(
+                teamsCombinationsArray[teams[1]],
+                playersInMatch
+            );
+            const difference = Math.abs(pointsTeamA - pointsTeamB);
+            if (!bestMatch.difference || bestMatch.difference > difference) {
+                bestMatch.difference = difference;
+                bestMatch.teams = addTeamsDataToMatch(teamsCombinationsArray, teams, pointsTeamA, pointsTeamB, playersInMatch);
+            }
+        });
+
+        
+
+        return bestMatch;
+    }
+
+    const addTeamsDataToMatch = (teamsCombinationsArray, teams, pointsTeamA, pointsTeamB, playersInMatch) => {
+        const teamsData = {};
+        teamsData.teamA = {
+            playersIndexes: teamsCombinationsArray[teams[0]],
+            points: pointsTeamA
+        }
+        teamsData.teamB = {
+            playersIndexes: teamsCombinationsArray[teams[1]],
+            points: pointsTeamB
+        }
+        
+        teamsData.teamA.playersData = [];
+        teamsData.teamB.playersData = [];
+        teamsData.teamA.playersIndexes.forEach(playerIndex => {
+            teamsData.teamA.playersData.push(playersInMatch[playerIndex]);
+        });
+        teamsData.teamB.playersIndexes.forEach(playerIndex => {
+            teamsData.teamB.playersData.push(playersInMatch[playerIndex]);
+        });
+        return teamsData;
+    }
 
     const bindEvents = () => {
         $playersList.find('.list-group-item-player').on('click', e => {

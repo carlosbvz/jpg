@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10440,492 +10440,6 @@ return jQuery;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_styles_main_scss__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_styles_main_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__assets_styles_main_scss__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__assets_scripts_global__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_playersTool_add_add__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_playersTool_add_add___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_playersTool_add_add__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_playersTool_delete_delete__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_playersTool_delete_delete___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_playersTool_delete_delete__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar__);
-// Styles entry file
-
-
-
-
-
-
-
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__ = __webpack_require__(4);
-
-
-var playersData;
-
-const Match = (() => {
-    const $playersList = $('#players-list');
-    const $totalPlayersCountDisplay = $('#total-players');
-    const $generateTeams = $('#generate-teams');
-    const $teamAGrid = $('#team-A-grid');
-    const $teamBGrid = $('#team-B-grid');
-    const $alertPlayers = $('#alert-players');
-
-    let totalPlayers = [];
-
-    const init = () => {
-        $.ajax({
-            url: '/players',
-            method: 'GET'
-        }).done(data => {
-            playersData = data;
-            bindEvents();
-        });
-    };
-
-    const displayTeamsInUI = (teamA, teamB) => {
-        $teamAGrid.html('');
-        $teamBGrid.html('');
-        teamA.playersData.forEach(player => {
-            $teamAGrid.append(`
-              <p>${player.name}</p>
-          `);
-        });
-        teamB.playersData.forEach(player => {
-            $teamBGrid.append(`
-              <p>${player.name}</p>
-          `);
-        });
-    };
-
-    const message = {
-        show (msg) {
-            $alertPlayers.find('.plert-players-text').html(msg);
-            $alertPlayers.show();
-        },
-        hide () {
-            $alertPlayers.hide();
-        }
-    };
-
-    const createTeams = () => {
-        const teamsPerMatchCount = 2; // 2 teams per match
-        const playersInMatch = totalPlayers;
-        const matchSize = playersInMatch.length;
-        const teamSize = matchSize / 2;
-
-        const teamInput = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getInputArrayFromInt(matchSize);
-
-        let msg = '';
-        if (matchSize === 0) msg = 'Please select an even number of players.';
-        else if (__WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].isEven(matchSize) && matchSize > 12) {
-            msg = 'We only support matches of 12 players maximum.';
-        } else if (__WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].isEven(matchSize)) {
-            const teamsCombinationsArray = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getCombinationIndexes(
-                teamInput,
-                teamSize
-            );
-            const teamsCombinationsCount = teamsCombinationsArray.length;
-
-            const matchInput = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getInputArrayFromInt(teamsCombinationsCount);
-            const matchCombinationsArray = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getCombinationIndexes(
-                matchInput,
-                teamsPerMatchCount
-            );
-
-            const validMatches = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getValidMatches(
-                matchCombinationsArray,
-                teamsCombinationsArray
-            );
-
-            let bestMatch = {};
-            validMatches.forEach(teams => {
-                const pointsTeamA = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getAllPointsInTeam(
-                    teamsCombinationsArray[teams[0]],
-                    playersInMatch
-                );
-                const pointsTeamB = __WEBPACK_IMPORTED_MODULE_0__scripts_util_algorithm__["a" /* default */].getAllPointsInTeam(
-                    teamsCombinationsArray[teams[1]],
-                    playersInMatch
-                );
-                const difference = Math.abs(pointsTeamA - pointsTeamB);
-                if (!bestMatch.difference || bestMatch.difference > difference) {
-                    bestMatch.difference = difference;
-                    bestMatch.teams = {
-                        teamA: {
-                            playersIndexes: teamsCombinationsArray[teams[0]],
-                            points: pointsTeamA
-                        },
-                        teamB: {
-                            playersIndexes: teamsCombinationsArray[teams[1]],
-                            points: pointsTeamB
-                        }
-                    };
-                }
-            });
-
-            bestMatch.teams.teamA.playersData = [];
-            bestMatch.teams.teamB.playersData = [];
-            bestMatch.teams.teamA.playersIndexes.forEach(playerIndex => {
-                bestMatch.teams.teamA.playersData.push(playersInMatch[playerIndex]);
-            });
-            bestMatch.teams.teamB.playersIndexes.forEach(playerIndex => {
-                bestMatch.teams.teamB.playersData.push(playersInMatch[playerIndex]);
-            });
-
-            displayTeamsInUI(bestMatch.teams.teamA, bestMatch.teams.teamB);
-        } else {
-            msg = `Cannot play with an Odd number of players: ${matchSize}`;
-        }
-        if (msg) message.show(msg);
-        else message.hide();
-    };
-
-    const bindEvents = () => {
-        $playersList.find('.list-group-item-player').on('click', e => {
-            const playerID = $(e.currentTarget).data('player-id');
-            const player = playersData.filter(player => player._id === playerID)[0];
-            // Removing
-            if ($(e.currentTarget).hasClass('active')) {
-                $(e.currentTarget).removeClass('active');
-                totalPlayers = totalPlayers.filter(player => {
-                    if (playerID !== player._id) return player;
-                });
-                // Adding
-            } else {
-                $(e.currentTarget).addClass('active');
-                totalPlayers.push(player);
-            }
-            updateTotalPlayersCount();
-            e.preventDefault();
-        });
-        $generateTeams.on('click', e => {
-            createTeams();
-        });
-    };
-
-    const updateTotalPlayersCount = () => {
-        $totalPlayersCountDisplay.html(totalPlayers.length);
-    };
-
-    return {
-        init
-    };
-})();
-
-Match.init();
-
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const algorithm = (() => {
-    const getSubset = (input, subset) => {
-        const result = [];
-        for (let i = 0; i < subset.length; i++) result[i] = input[subset[i]];
-        return result;
-    };
-    // Gets the combinations
-    const getCombinationIndexes = (input, sequenceLength) => {
-        const subsets = [];
-        const buffer = [];
-        if (sequenceLength <= input.length) {
-            // first index sequence: 0, 1, 2, ...
-            for (let i = 0; (buffer[i] = i) < sequenceLength - 1; i++);
-            subsets.push(getSubset(input, buffer));
-            for (; ;) {
-                let i;
-                for (
-                    i = sequenceLength - 1;
-                    i >= 0 && buffer[i] === input.length - sequenceLength + i;
-                    i--
-                );
-                if (i < 0) {
-                    break;
-                }
-                buffer[i]++;
-                for (++i; i < sequenceLength; i++) {
-                    buffer[i] = buffer[i - 1] + 1;
-                }
-                subsets.push(getSubset(input, buffer));
-            }
-        }
-        return subsets;
-    };
-
-    const isEven = number => {
-        return number % 2 === 0;
-    };
-
-    const isInArray = (value, array) => {
-        return array.indexOf(value) > -1;
-    };
-
-    const getAllPointsInTeam = (playersArray, playersData) => {
-        let totalPoints = 0;
-        playersArray.forEach(playerIndex => {
-            totalPoints += parseFloat(playersData[playerIndex].rating);
-        });
-        return totalPoints;
-    };
-
-    // const round = (decimals) => {
-    //     return (num) => parseFloat(num).toFixed(decimals);
-    // };
-
-    // const roundToTwo = round(2);
-    // const roundToThree = round(3);
-    /**
-     *
-     * @param {Number} int
-     */
-    const getInputArrayFromInt = int => {
-        const input = [];
-        while (int) input.push(int-- - 1);
-        return input;
-    };
-    /**
-     * @method getValidMatches - Removes those instances where the same player appears in both teams
-     * @param {*} matchCombinationsArray
-     * @param {*} teamsCombinationsArray
-     */
-    const getValidMatches = (matchCombinationsArray, teamsCombinationsArray) => {
-        return matchCombinationsArray.filter(teams => {
-            let isValidMatch = true;
-            teamsCombinationsArray[teams[0]].forEach(player => {
-                if (isInArray(player, teamsCombinationsArray[teams[1]])) {
-                    isValidMatch = false;
-                }
-            });
-            if (isValidMatch) return teams;
-        });
-    };
-
-    return {
-        getCombinationIndexes,
-        isEven,
-        getAllPointsInTeam,
-        getInputArrayFromInt,
-        getValidMatches
-    };
-})();
-
-/* harmony default export */ __webpack_exports__["a"] = (algorithm);
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {const addForm = (() => {
-    const $playerAddForm = $('#playerAdd');
-
-    const init = () => {
-        formSubmit();
-    };
-
-    const formSubmit = () => {
-        $playerAddForm.on('submit', (e) => {
-            const nameVal = $playerAddForm.find('input[name="name"]').val();
-            const nicknameVal = $playerAddForm.find('input[name="nickname"]').val();
-
-            if (nameVal && nicknameVal) {
-                $.ajax({
-                    url: '/players',
-                    method: 'POST',
-                    data: {
-                        name: $playerAddForm.find('input[name="name"]').val(),
-                        nickname: $playerAddForm.find('input[name="nickname"]').val(),
-                        rating: 0
-                    }
-                })
-                    .done(() => {
-                        window.location.href = '/playersTool';
-                    });
-            } else {
-                alert('All fields are required');
-            }
-            e.preventDefault();
-        });
-    };
-
-    return {
-        init
-    };
-})();
-
-addForm.init();
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {const deleteForm = (() => {
-    const $playerDeleteBtn = $('.playerDeleteBtn');
-    const playerId = window.location.href.split('/delete/')[1];
-
-    const init = () => {
-        eventHandlers();
-    };
-
-    const eventHandlers = () => {
-        $playerDeleteBtn.on('click', (e) => {
-            $.ajax({
-                url: '/players/' + playerId,
-                method: 'DELETE'
-            })
-                .done(() => {
-                    window.location.href = '/playersTool';
-                });
-            e.preventDefault();
-        });
-    };
-
-    return {
-        init
-    };
-})();
-
-deleteForm.init();
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {const editForm = (() => {
-    const $nameEditBtn = $('.nameEditBtn');
-    const $nicknameEditBtn = $('.nicknameEditBtn');
-    const $pointsEditBtn = $('.pointsEditBtn');
-    const playerId = window.location.href.split('edit/')[1];
-
-    const init = () => {
-        eventHandlers();
-    };
-
-    const eventHandlers = () => {
-        $nameEditBtn.on('click', e => {
-            $.ajax({
-                url: '/players/' + playerId,
-                method: 'PUT',
-                data: {
-                    name: $nameEditBtn.prev().val()
-                }
-            }).done(() => {
-                window.location.href = '/playersTool';
-            });
-            e.preventDefault();
-        });
-
-        $nicknameEditBtn.on('click', e => {
-            $.ajax({
-                url: '/players/' + playerId,
-                method: 'PUT',
-                data: {
-                    nickname: $nicknameEditBtn.prev().val()
-                }
-            }).done(() => {
-                window.location.href = '/playersTool';
-            });
-            e.preventDefault();
-        });
-
-        $pointsEditBtn.on('click', e => {
-            $.ajax({
-                url: '/players/' + playerId,
-                method: 'PUT',
-                data: {
-                    rating: $pointsEditBtn.prev().val()
-                }
-            }).done(() => {
-                window.location.href = '/playersTool';
-            });
-            e.preventDefault();
-        });
-    };
-
-    return {
-        init
-    };
-})();
-
-editForm.init();
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {
-const Observables = __webpack_require__(9);
-
-const difficultyBar = (() => {
-
-  const $difficultyBar = $('.difficultyBar');
-  const $levelsBtns = $difficultyBar.find('button');
-  const activeBtnCssClass = 'btn-secondary active';
-  const defaultBtnCssClass = 'btn-light';
-  
-
-  const init = () => {
-    eventHandlers();
-  };
-
-  const eventHandlers = () => {
-    $levelsBtns.on('click', (e) => {
-      if ($(e.currentTarget).hasClass('active')) return false;
-      broadcastLevel($(e.currentTarget).data('level'));
-      updateUI($(e.currentTarget));
-    })
-  };
-
-  const updateUI = ($activeBtn) => {
-    $levelsBtns.removeClass(activeBtnCssClass);
-    $levelsBtns.addClass(defaultBtnCssClass);
-
-    $activeBtn.removeClass(defaultBtnCssClass);
-    $activeBtn.addClass(activeBtnCssClass);
-  };
-
-  const broadcastLevel = (level) => {
-    Observables.level$.next(level);
-  };
-
-  return {
-    init
-  }
-})();
-
-difficultyBar.init();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 // CONCATENATED MODULE: ./node_modules/tslib/tslib.es6.js
 /*! *****************************************************************************
@@ -15301,12 +14815,554 @@ var zip_ZipBufferIterator = /*@__PURE__*/ (function (_super) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "level$", function() { return level$; });
 
 
+
 /**
  * Used to broadcast the match generator level
  */
-const level$ = new Subject_Subject()
+const level$ = new BehaviorSubject_BehaviorSubject(undefined)
 
 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_styles_main_scss__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_styles_main_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__assets_styles_main_scss__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__assets_scripts_global__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__assets_scripts_global___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__assets_scripts_global__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_playersTool_add_add__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_playersTool_add_add___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_playersTool_add_add__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_playersTool_delete_delete__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_playersTool_delete_delete___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_playersTool_delete_delete__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar__);
+// Styles entry file
+
+
+
+
+
+
+
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {const algorithm = __webpack_require__(5);
+const Observables = __webpack_require__(1);
+
+var playersData;
+
+const Match = (() => {
+
+    const $playersList = $('#players-list');
+    const $totalPlayersCountDisplay = $('#total-players');
+    const $generateTeams = $('#generate-teams');
+    const $teamAGrid = $('#team-A-grid');
+    const $teamBGrid = $('#team-B-grid');
+    const $alertPlayers = $('#alert-players');
+
+    const matchLevel = Observables.level$.getValue();
+
+
+    let totalPlayers = [];
+
+    const init = () => {
+
+        // TODO: Avoid this call and get data from markup since is already there form hbs/node
+        $.ajax({
+            url: '/players',
+            method: 'GET'
+        }).done(data => {
+            playersData = data;
+            bindEvents();
+        });
+    };
+
+    const displayTeamsInUI = (teamA, teamB) => {
+        $teamAGrid.html('');
+        $teamBGrid.html('');
+        teamA.playersData.forEach(player => {
+            $teamAGrid.append(`
+              <p>${player.name}</p>
+          `);
+        });
+        teamB.playersData.forEach(player => {
+            $teamBGrid.append(`
+              <p>${player.name}</p>
+          `);
+        });
+    };
+
+    const message = {
+        show (msg) {
+            $alertPlayers.find('.plert-players-text').html(msg);
+            $alertPlayers.show();
+        },
+        hide () {
+            $alertPlayers.hide();
+        }
+    };
+
+    const createTeams = () => {
+
+        const matchLevel = Observables.level$.getValue();
+        const teamsPerMatchCount = 2; // 2 teams per match
+        const playersInMatch = totalPlayers;
+        const matchSize = playersInMatch.length;
+        const teamSize = matchSize / 2;
+
+        const teamInput = algorithm.getInputArrayFromInt(matchSize);
+
+        let msg = '';
+        if (matchSize === 0) msg = 'Please select an even number of players.';
+        else if (algorithm.isEven(matchSize) && matchSize > 12) {
+            msg = 'We only support matches of 12 players maximum.';
+        } else if (algorithm.isEven(matchSize)) {
+            const teamsCombinationsArray = algorithm.getCombinationIndexes(
+                teamInput,
+                teamSize
+            );
+            const teamsCombinationsCount = teamsCombinationsArray.length;
+            const matchInput = algorithm.getInputArrayFromInt(teamsCombinationsCount);
+            const matchCombinationsArray = algorithm.getCombinationIndexes(
+                matchInput,
+                teamsPerMatchCount
+            );
+            const validMatchesByTeamIndex = algorithm.getValidMatches(
+                matchCombinationsArray,
+                teamsCombinationsArray
+            );
+
+            let bestMatch = '';
+            switch(matchLevel) {
+                case 'b': // balanced
+                    bestMatch = getBalancedMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
+                    break;
+
+                case 'r': // random
+                    bestMatch = getRandomMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
+                    break;
+            
+                default:
+                    break;
+            }
+
+            if (bestMatch) displayTeamsInUI(bestMatch.teams.teamA, bestMatch.teams.teamB);
+            else alert('feature for this level not supported');
+        } else {
+            msg = `Cannot play with an Odd number of players: ${matchSize}`;
+        }
+        if (msg) message.show(msg);
+        else message.hide();
+    };
+
+    const getRandomMatch = (validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch) => {
+        const randomMatchTeams = validMatchesByTeamIndex[Math.floor(Math.random() * validMatchesByTeamIndex.length)];
+        const pointsTeamA = algorithm.getAllPointsInTeam(
+            teamsCombinationsArray[randomMatchTeams[0]],
+            playersInMatch
+        );
+        const pointsTeamB = algorithm.getAllPointsInTeam(
+            teamsCombinationsArray[randomMatchTeams[1]],
+            playersInMatch
+        );
+
+        let randomMatch = {};
+        randomMatch.teams = addTeamsDataToMatch(teamsCombinationsArray, randomMatchTeams, pointsTeamA, pointsTeamB, playersInMatch);
+        
+        return randomMatch;
+
+    }
+
+    const getBalancedMatch = (validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch) => {
+        // Find best (balanced) match
+        let bestMatch = {};
+        validMatchesByTeamIndex.forEach(teams => {
+            const pointsTeamA = algorithm.getAllPointsInTeam(
+                teamsCombinationsArray[teams[0]],
+                playersInMatch
+            );
+            const pointsTeamB = algorithm.getAllPointsInTeam(
+                teamsCombinationsArray[teams[1]],
+                playersInMatch
+            );
+            const difference = Math.abs(pointsTeamA - pointsTeamB);
+            if (!bestMatch.difference || bestMatch.difference > difference) {
+                bestMatch.difference = difference;
+                bestMatch.teams = addTeamsDataToMatch(teamsCombinationsArray, teams, pointsTeamA, pointsTeamB, playersInMatch);
+            }
+        });
+
+        
+
+        return bestMatch;
+    }
+
+    const addTeamsDataToMatch = (teamsCombinationsArray, teams, pointsTeamA, pointsTeamB, playersInMatch) => {
+        const teamsData = {};
+        teamsData.teamA = {
+            playersIndexes: teamsCombinationsArray[teams[0]],
+            points: pointsTeamA
+        }
+        teamsData.teamB = {
+            playersIndexes: teamsCombinationsArray[teams[1]],
+            points: pointsTeamB
+        }
+        
+        teamsData.teamA.playersData = [];
+        teamsData.teamB.playersData = [];
+        teamsData.teamA.playersIndexes.forEach(playerIndex => {
+            teamsData.teamA.playersData.push(playersInMatch[playerIndex]);
+        });
+        teamsData.teamB.playersIndexes.forEach(playerIndex => {
+            teamsData.teamB.playersData.push(playersInMatch[playerIndex]);
+        });
+        return teamsData;
+    }
+
+    const bindEvents = () => {
+        $playersList.find('.list-group-item-player').on('click', e => {
+            const playerID = $(e.currentTarget).data('player-id');
+            const player = playersData.filter(player => player._id === playerID)[0];
+            // Removing
+            if ($(e.currentTarget).hasClass('active')) {
+                $(e.currentTarget).removeClass('active');
+                totalPlayers = totalPlayers.filter(player => {
+                    if (playerID !== player._id) return player;
+                });
+                // Adding
+            } else {
+                $(e.currentTarget).addClass('active');
+                totalPlayers.push(player);
+            }
+            updateTotalPlayersCount();
+            e.preventDefault();
+        });
+        $generateTeams.on('click', e => {
+            createTeams();
+        });
+    };
+
+    const updateTotalPlayersCount = () => {
+        $totalPlayersCountDisplay.html(totalPlayers.length);
+    };
+
+    return {
+        init
+    };
+})();
+
+Match.init();
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCombinationIndexes", function() { return getCombinationIndexes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isEven", function() { return isEven; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllPointsInTeam", function() { return getAllPointsInTeam; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInputArrayFromInt", function() { return getInputArrayFromInt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getValidMatches", function() { return getValidMatches; });
+
+const getSubset = (input, subset) => {
+    const result = [];
+    for (let i = 0; i < subset.length; i++) result[i] = input[subset[i]];
+    return result;
+};
+// Gets the combinations
+const getCombinationIndexes = (input, sequenceLength) => {
+    const subsets = [];
+    const buffer = [];
+    if (sequenceLength <= input.length) {
+        // first index sequence: 0, 1, 2, ...
+        for (let i = 0; (buffer[i] = i) < sequenceLength - 1; i++);
+        subsets.push(getSubset(input, buffer));
+        for (; ;) {
+            let i;
+            for (
+                i = sequenceLength - 1;
+                i >= 0 && buffer[i] === input.length - sequenceLength + i;
+                i--
+            );
+            if (i < 0) {
+                break;
+            }
+            buffer[i]++;
+            for (++i; i < sequenceLength; i++) {
+                buffer[i] = buffer[i - 1] + 1;
+            }
+            subsets.push(getSubset(input, buffer));
+        }
+    }
+    return subsets;
+};
+
+const isEven = number => {
+    return number % 2 === 0;
+};
+
+const isInArray = (value, array) => {
+    return array.indexOf(value) > -1;
+};
+
+const getAllPointsInTeam = (playersArray, playersData) => {
+    let totalPoints = 0;
+    playersArray.forEach(playerIndex => {
+        totalPoints += parseFloat(playersData[playerIndex].rating);
+    });
+    return totalPoints;
+};
+
+// const round = (decimals) => {
+//     return (num) => parseFloat(num).toFixed(decimals);
+// };
+
+// const roundToTwo = round(2);
+// const roundToThree = round(3);
+/**
+ *
+ * @param {Number} int
+ */
+const getInputArrayFromInt = int => {
+    const input = [];
+    while (int) input.push(int-- - 1);
+    return input;
+};
+/**
+ * @method getValidMatches - Removes those instances where the same player appears in both teams
+ * @param {*} matchCombinationsArray
+ * @param {*} teamsCombinationsArray
+ */
+const getValidMatches = (matchCombinationsArray, teamsCombinationsArray) => {
+    return matchCombinationsArray.filter(teams => {
+        let isValidMatch = true;
+        teamsCombinationsArray[teams[0]].forEach(player => {
+            if (isInArray(player, teamsCombinationsArray[teams[1]])) {
+                isValidMatch = false;
+            }
+        });
+        if (isValidMatch) return teams;
+    });
+};
+
+
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {const addForm = (() => {
+    const $playerAddForm = $('#playerAdd');
+
+    const init = () => {
+        formSubmit();
+    };
+
+    const formSubmit = () => {
+        $playerAddForm.on('submit', (e) => {
+            const nameVal = $playerAddForm.find('input[name="name"]').val();
+            const nicknameVal = $playerAddForm.find('input[name="nickname"]').val();
+
+            if (nameVal && nicknameVal) {
+                $.ajax({
+                    url: '/players',
+                    method: 'POST',
+                    data: {
+                        name: $playerAddForm.find('input[name="name"]').val(),
+                        nickname: $playerAddForm.find('input[name="nickname"]').val(),
+                        rating: 0
+                    }
+                })
+                    .done(() => {
+                        window.location.href = '/playersTool';
+                    });
+            } else {
+                alert('All fields are required');
+            }
+            e.preventDefault();
+        });
+    };
+
+    return {
+        init
+    };
+})();
+
+addForm.init();
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {const deleteForm = (() => {
+    const $playerDeleteBtn = $('.playerDeleteBtn');
+    const playerId = window.location.href.split('/delete/')[1];
+
+    const init = () => {
+        eventHandlers();
+    };
+
+    const eventHandlers = () => {
+        $playerDeleteBtn.on('click', (e) => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'DELETE'
+            })
+                .done(() => {
+                    window.location.href = '/playersTool';
+                });
+            e.preventDefault();
+        });
+    };
+
+    return {
+        init
+    };
+})();
+
+deleteForm.init();
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {const editForm = (() => {
+    const $nameEditBtn = $('.nameEditBtn');
+    const $nicknameEditBtn = $('.nicknameEditBtn');
+    const $pointsEditBtn = $('.pointsEditBtn');
+    const playerId = window.location.href.split('edit/')[1];
+
+    const init = () => {
+        eventHandlers();
+    };
+
+    const eventHandlers = () => {
+        $nameEditBtn.on('click', e => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'PUT',
+                data: {
+                    name: $nameEditBtn.prev().val()
+                }
+            }).done(() => {
+                window.location.href = '/playersTool';
+            });
+            e.preventDefault();
+        });
+
+        $nicknameEditBtn.on('click', e => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'PUT',
+                data: {
+                    nickname: $nicknameEditBtn.prev().val()
+                }
+            }).done(() => {
+                window.location.href = '/playersTool';
+            });
+            e.preventDefault();
+        });
+
+        $pointsEditBtn.on('click', e => {
+            $.ajax({
+                url: '/players/' + playerId,
+                method: 'PUT',
+                data: {
+                    rating: $pointsEditBtn.prev().val()
+                }
+            }).done(() => {
+                window.location.href = '/playersTool';
+            });
+            e.preventDefault();
+        });
+    };
+
+    return {
+        init
+    };
+})();
+
+editForm.init();
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {
+const Observables = __webpack_require__(1);
+
+const difficultyBar = (() => {
+
+  const $difficultyBar = $('.difficultyBar');
+  const $levelsBtns = $difficultyBar.find('button');
+  const activeBtnCssClass = 'btn-secondary active';
+  const defaultBtnCssClass = 'btn-light';
+  const defaultLevel = 'b'; // balanced
+  
+
+  const init = () => {
+    broadcastLevel( getDefaultLevel() );
+    eventHandlers();
+  };
+
+  const getDefaultLevel = () => {
+    const activetLevel = $difficultyBar.find('.active').data('level');
+    if (activetLevel) return activetLevel;
+    else return defaultLevel;
+  };
+
+  const eventHandlers = () => {
+    $levelsBtns.on('click', (e) => {
+      if ($(e.currentTarget).hasClass('active')) return false;
+      broadcastLevel($(e.currentTarget).data('level'));
+      updateUI($(e.currentTarget));
+    })
+  };
+
+  const updateUI = ($activeBtn) => {
+    $levelsBtns.removeClass(activeBtnCssClass);
+    $levelsBtns.addClass(defaultBtnCssClass);
+
+    $activeBtn.removeClass(defaultBtnCssClass);
+    $activeBtn.addClass(activeBtnCssClass);
+  };
+
+  const broadcastLevel = (level) => {
+    Observables.level$.next(level);
+  };
+
+  return {
+    init
+  }
+})();
+
+difficultyBar.init();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);
