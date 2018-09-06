@@ -5,8 +5,6 @@ var playersData;
 
 const Match = (() => {
 
-    const $playersList = $('#players-list');
-    const $totalPlayersCountDisplay = $('#total-players');
     const $generateTeams = $('#generate-teams');
     const $teamAGrid = $('#team-A-grid');
     const $teamBGrid = $('#team-B-grid');
@@ -25,7 +23,7 @@ const Match = (() => {
             method: 'GET'
         }).done(data => {
             playersData = data;
-            bindEvents();
+            eventHandlers();
         });
     };
 
@@ -171,31 +169,11 @@ const Match = (() => {
         return teamsData;
     }
 
-    const bindEvents = () => {
-        $playersList.find('.list-group-item-player').on('click', e => {
-            const playerID = $(e.currentTarget).data('player-id');
-            const player = playersData.filter(player => player._id === playerID)[0];
-            // Removing
-            if ($(e.currentTarget).hasClass('active')) {
-                $(e.currentTarget).removeClass('active');
-                totalPlayers = totalPlayers.filter(player => {
-                    if (playerID !== player._id) return player;
-                });
-                // Adding
-            } else {
-                $(e.currentTarget).addClass('active');
-                totalPlayers.push(player);
-            }
-            updateTotalPlayersCount();
-            e.preventDefault();
-        });
+    const eventHandlers = () => {
+        
         $generateTeams.on('click', e => {
             createTeams();
         });
-    };
-
-    const updateTotalPlayersCount = () => {
-        $totalPlayersCountDisplay.html(totalPlayers.length);
     };
 
     return {

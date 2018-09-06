@@ -14813,13 +14813,19 @@ var zip_ZipBufferIterator = /*@__PURE__*/ (function (_super) {
 
 // CONCATENATED MODULE: ./app/assets/scripts/util/observables.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "level$", function() { return level$; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newGuestName$", function() { return newGuestName$; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "totalPlayers$", function() { return totalPlayers$; });
 
 
 
 /**
  * Used to broadcast the match generator level
  */
-const level$ = new BehaviorSubject_BehaviorSubject(undefined)
+const level$ = new BehaviorSubject_BehaviorSubject(undefined);
+
+const newGuestName$ = new Subject_Subject();
+
+const totalPlayers$ = new BehaviorSubject_BehaviorSubject(undefined);
 
 
 
@@ -14841,7 +14847,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_playersTool_edit_edit__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_difficultyBar_difficultyBar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_addGuestForm_addGuestForm__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_addGuestForm_addGuestForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_addGuestForm_addGuestForm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_playersList_playersList__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_playersList_playersList___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__components_playersList_playersList__);
 // Styles entry file
+
+
 
 
 
@@ -14868,8 +14880,6 @@ var playersData;
 
 const Match = (() => {
 
-    const $playersList = $('#players-list');
-    const $totalPlayersCountDisplay = $('#total-players');
     const $generateTeams = $('#generate-teams');
     const $teamAGrid = $('#team-A-grid');
     const $teamBGrid = $('#team-B-grid');
@@ -14888,7 +14898,7 @@ const Match = (() => {
             method: 'GET'
         }).done(data => {
             playersData = data;
-            bindEvents();
+            eventHandlers();
         });
     };
 
@@ -15034,31 +15044,11 @@ const Match = (() => {
         return teamsData;
     }
 
-    const bindEvents = () => {
-        $playersList.find('.list-group-item-player').on('click', e => {
-            const playerID = $(e.currentTarget).data('player-id');
-            const player = playersData.filter(player => player._id === playerID)[0];
-            // Removing
-            if ($(e.currentTarget).hasClass('active')) {
-                $(e.currentTarget).removeClass('active');
-                totalPlayers = totalPlayers.filter(player => {
-                    if (playerID !== player._id) return player;
-                });
-                // Adding
-            } else {
-                $(e.currentTarget).addClass('active');
-                totalPlayers.push(player);
-            }
-            updateTotalPlayersCount();
-            e.preventDefault();
-        });
+    const eventHandlers = () => {
+        
         $generateTeams.on('click', e => {
             createTeams();
         });
-    };
-
-    const updateTotalPlayersCount = () => {
-        $totalPlayersCountDisplay.html(totalPlayers.length);
     };
 
     return {
@@ -15362,6 +15352,92 @@ const difficultyBar = (() => {
 })();
 
 difficultyBar.init();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {const Observables = __webpack_require__(1);
+
+const addGuestForm = (() => {
+
+    const $addGuestForm = $('.addGuestForm');
+    const $addGuestBtn = $addGuestForm.find('#add-guest');
+
+    const init = () => {
+        eventHandlers();
+    }
+
+    const eventHandlers = () => {
+        $addGuestBtn.on('click', (e) => {
+            const guestName = $(e.currentTarget).text();
+            if (guestName) Observables.newGuestName$.next(guestName);
+        });
+    };
+
+    return {
+        init
+    }
+
+})();
+
+addGuestForm.init();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function($) {const playersList = (() => {
+
+    const $playersList = $('.playersList')
+    const $playersListPanel = $playersList.find('#players-list-panel');
+    const $totalPlayersCountDisplay = $playersList.find('#total-players');
+
+    const init = () => {
+        eventHandlers();
+    };
+
+    const eventHandlers = () => {
+        $playersListPanel.find('.list-group-item-player').on('click', e => {
+            const $selectedPlayer = $(e.currentTarget);
+            const selectedPlayerId = $selectedPlayer.data('player-id');
+
+            updateUI($selectedPlayer);
+            
+            // const player = playersData.filter(player => player._id === playerID)[0];
+            // Removing
+            // if ($(e.currentTarget).hasClass('active')) {
+            //     $(e.currentTarget).removeClass('active');
+            //     totalPlayers = totalPlayers.filter(player => {
+            //         if (playerID !== player._id) return player;
+            //     });
+            //     // Adding
+            // } else {
+            //     $(e.currentTarget).addClass('active');
+            //     totalPlayers.push(player);
+            // }
+            // updateTotalPlayersCount();
+            e.preventDefault();
+        });
+    };
+
+    const updateUI = ($selectedPlayer) => {
+        $selectedPlayer.toggleClass('active')
+    };
+
+    const updateTotalPlayersCount = () => {
+        // $totalPlayersCountDisplay.html(totalPlayers.length);
+    };
+
+    return {
+        init
+    }
+
+})();
+
+playersList.init();
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
