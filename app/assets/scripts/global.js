@@ -1,7 +1,7 @@
 const algorithm = require('./util/algorithm');
 const Observables = require('./util/observables');
 
-var playersData;
+// var playersData;
 
 const Match = (() => {
 
@@ -10,10 +10,9 @@ const Match = (() => {
     const $teamBGrid = $('#team-B-grid');
     const $alertPlayers = $('#alert-players');
 
-    const matchLevel = Observables.level$.getValue();
+    // const matchLevel = Observables.level$.getValue();
 
-
-    let totalPlayers = [];
+    // let totalPlayers = [];
 
     const init = () => {
 
@@ -48,8 +47,8 @@ const Match = (() => {
     const createTeams = () => {
 
         const matchLevel = Observables.level$.getValue();
-        const playersInMatch = Observables.selectedPlayersData$.getValue(); //totalPlayers;
-        
+        const playersInMatch = Observables.selectedPlayersData$.getValue(); // totalPlayers;
+
         const teamsPerMatchCount = 2; // 2 teams per match
         const matchSize = playersInMatch.length;
         const teamSize = matchSize / 2;
@@ -77,18 +76,18 @@ const Match = (() => {
             );
 
             let bestMatch = '';
-            switch(matchLevel) {
-                case 'b': // balanced
-                    bestMatch = getBalancedMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
-                    break;
+            switch (matchLevel) {
+            case 'b': // balanced
+                bestMatch = getBalancedMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
+                break;
 
-                case 'r': // random
-                    bestMatch = getRandomMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
-                    break;
-            
-                default:
-                    break;
-            }
+            case 'r': // random
+                bestMatch = getRandomMatch(validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch);
+                break;
+
+            default:
+                break;
+            };
 
             if (bestMatch) displayTeamsInUI(bestMatch.teams.teamA, bestMatch.teams.teamB);
             else alert('feature for this level not supported');
@@ -112,10 +111,10 @@ const Match = (() => {
 
         let randomMatch = {};
         randomMatch.teams = addTeamsDataToMatch(teamsCombinationsArray, randomMatchTeams, pointsTeamA, pointsTeamB, playersInMatch);
-        
+
         return randomMatch;
 
-    }
+    };
 
     const getBalancedMatch = (validMatchesByTeamIndex, teamsCombinationsArray, playersInMatch) => {
         // Find best (balanced) match
@@ -136,22 +135,22 @@ const Match = (() => {
             }
         });
 
-        
-
         return bestMatch;
-    }
+    };
 
     const addTeamsDataToMatch = (teamsCombinationsArray, teams, pointsTeamA, pointsTeamB, playersInMatch) => {
         const teamsData = {};
+
         teamsData.teamA = {
             playersIndexes: teamsCombinationsArray[teams[0]],
             points: pointsTeamA
-        }
+        };
+
         teamsData.teamB = {
             playersIndexes: teamsCombinationsArray[teams[1]],
             points: pointsTeamB
-        }
-        
+        };
+
         teamsData.teamA.playersData = [];
         teamsData.teamB.playersData = [];
         teamsData.teamA.playersIndexes.forEach(playerIndex => {
@@ -161,10 +160,10 @@ const Match = (() => {
             teamsData.teamB.playersData.push(playersInMatch[playerIndex]);
         });
         return teamsData;
-    }
+    };
 
     const eventHandlers = () => {
-        
+
         $generateTeams.on('click', e => {
             createTeams();
         });

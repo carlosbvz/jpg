@@ -1,5 +1,4 @@
-import { Subject} from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 /**
  * Used to broadcast the match generator level
@@ -14,4 +13,4 @@ export {
     level$,
     newGuestData$,
     selectedPlayersData$
-}
+};

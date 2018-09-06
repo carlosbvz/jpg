@@ -86,4 +86,4 @@ export {
     getAllPointsInTeam,
     getInputArrayFromInt,
     getValidMatches
-}
+};

@@ -8,20 +8,22 @@ const addGuestForm = (() => {
 
     const init = () => {
         eventHandlers();
-    }
+    };
 
     const eventHandlers = () => {
         $addGuestBtn.on('click', (e) => {
             const guestName = $guestNameInput.val();
+            let id = new Date();
+            id.toString(36).slice(-8);
             if (guestName) {
                 const guestData = {
-                    "_id": (+new Date).toString(36).slice(-8),
+                    '_id': id,
                     name: guestName,
                     nickname: '',
                     rating: 0,
                     updated_at: new Date(),
-                    __v:0
-                }
+                    __v: 0
+                };
                 Observables.newGuestData$.next(guestData);
             }
         });
@@ -29,7 +31,7 @@ const addGuestForm = (() => {
 
     return {
         init
-    }
+    };
 
 })();
 
