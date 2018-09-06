@@ -14813,7 +14813,7 @@ var zip_ZipBufferIterator = /*@__PURE__*/ (function (_super) {
 
 // CONCATENATED MODULE: ./app/assets/scripts/util/observables.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "level$", function() { return level$; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newGuestName$", function() { return newGuestName$; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "newGuestData$", function() { return newGuestData$; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectedPlayersData$", function() { return selectedPlayersData$; });
 
 
@@ -14823,7 +14823,7 @@ var zip_ZipBufferIterator = /*@__PURE__*/ (function (_super) {
  */
 const level$ = new BehaviorSubject_BehaviorSubject(undefined);
 
-const newGuestName$ = new Subject_Subject();
+const newGuestData$ = new Subject_Subject();
 
 const selectedPlayersData$ = new BehaviorSubject_BehaviorSubject(undefined);
 
@@ -14923,8 +14923,9 @@ const Match = (() => {
     const createTeams = () => {
 
         const matchLevel = Observables.level$.getValue();
-        const teamsPerMatchCount = 2; // 2 teams per match
         const playersInMatch = Observables.selectedPlayersData$.getValue(); //totalPlayers;
+        
+        const teamsPerMatchCount = 2; // 2 teams per match
         const matchSize = playersInMatch.length;
         const teamSize = matchSize / 2;
 
@@ -15296,8 +15297,7 @@ editForm.init();
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function($) {
-const Observables = __webpack_require__(1);
+/* WEBPACK VAR INJECTION */(function($) {const Observables = __webpack_require__(1);
 
 const difficultyBar = (() => {
 
@@ -15357,6 +15357,7 @@ const addGuestForm = (() => {
 
     const $addGuestForm = $('.addGuestForm');
     const $addGuestBtn = $addGuestForm.find('#add-guest');
+    const $guestNameInput = $addGuestForm.find('#guest-name');
 
     const init = () => {
         eventHandlers();
@@ -15364,8 +15365,18 @@ const addGuestForm = (() => {
 
     const eventHandlers = () => {
         $addGuestBtn.on('click', (e) => {
-            const guestName = $(e.currentTarget).text();
-            if (guestName) Observables.newGuestName$.next(guestName);
+            const guestName = $guestNameInput.val();
+            if (guestName) {
+                const guestData = {
+                    "_id": (+new Date).toString(36).slice(-8),
+                    name: guestName,
+                    nickname: '',
+                    rating: 0,
+                    updated_at: new Date(),
+                    __v:0
+                }
+                Observables.newGuestData$.next(guestData);
+            }
         });
     };
 
@@ -15407,7 +15418,7 @@ const playersList = (() => {
     };
 
     const eventHandlers = () => {
-        $playersListPanel.find('.list-group-item-player').on('click', e => {
+        $playersListPanel.on('click', '.list-group-item-player' ,e => {
             const $selectedPlayer = $(e.currentTarget);
             const selectedPlayerData = $selectedPlayer.data('player');
 
@@ -15418,6 +15429,18 @@ const playersList = (() => {
 
             e.preventDefault();
         });
+
+        Observables.newGuestData$.subscribe( guestData => {
+            addGuestToList(guestData);
+        })
+    };
+
+    const addGuestToList = (guestData) => {
+        $playersListPanel.append(`
+            <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-player" data-player=${JSON.stringify(guestData)}>
+                ${guestData.name} (Guest)
+                <span class="badge badge-primary badge-pill">${guestData.rating}</span>
+            </a>`)
     };
 
     const updateUI = ($selectedPlayer) => {

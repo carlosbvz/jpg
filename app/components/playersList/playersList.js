@@ -23,7 +23,7 @@ const playersList = (() => {
     };
 
     const eventHandlers = () => {
-        $playersListPanel.find('.list-group-item-player').on('click', e => {
+        $playersListPanel.on('click', '.list-group-item-player' ,e => {
             const $selectedPlayer = $(e.currentTarget);
             const selectedPlayerData = $selectedPlayer.data('player');
 
@@ -34,6 +34,18 @@ const playersList = (() => {
 
             e.preventDefault();
         });
+
+        Observables.newGuestData$.subscribe( guestData => {
+            addGuestToList(guestData);
+        })
+    };
+
+    const addGuestToList = (guestData) => {
+        $playersListPanel.append(`
+            <a href="#" class="list-group-item d-flex justify-content-between align-items-center list-group-item-player" data-player=${JSON.stringify(guestData)}>
+                ${guestData.name} (Guest)
+                <span class="badge badge-primary badge-pill">${guestData.rating}</span>
+            </a>`)
     };
 
     const updateUI = ($selectedPlayer) => {

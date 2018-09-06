@@ -6,12 +6,12 @@ import { BehaviorSubject } from 'rxjs';
  */
 const level$ = new BehaviorSubject(undefined);
 
-const newGuestName$ = new Subject();
+const newGuestData$ = new Subject();
 
 const selectedPlayersData$ = new BehaviorSubject(undefined);
 
 export {
     level$,
-    newGuestName$,
+    newGuestData$,
     selectedPlayersData$
 }
