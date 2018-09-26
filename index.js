@@ -7,6 +7,7 @@ const handlebars = require('express-handlebars');
 const handlebarsHelpers = require('./core/utils/handlebarsHelpers');
 const contentRouter = require('./core/routes/contentRouter');
 const playersRouter = require('./core/routes/playersRouter');
+const matchesRouter = require('./core/routes/matchesRouter');
 const assetsRouter = require('./core/routes/assetsRouter');
 
 mongoose.Promise = global.Promise;
@@ -40,6 +41,7 @@ if (environment === 'local') {
 
 app.use('/assets', assetsRouter);
 app.use('/players', playersRouter);
+app.use('/matches', matchesRouter);
 app.use(contentRouter);
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));

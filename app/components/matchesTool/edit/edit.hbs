@@ -1,0 +1,8 @@
+<p> Name: {{this.player.name}}</p>
+<p>Nickname: {{this.player.nickname}}</p>
+<p>Points: {{#if this.player.rating}}{{this.player.rating}}{{/if}}{{#unless this.player.rating}}No points given{{/unless}}</p>
+
+<p>New Name: </p> <input name="name" type="text"> <button class="nameEditBtn">Update</button>
+<p>New Nickname: </p> <input name="nickname" type="text"> <button class="nicknameEditBtn">Update</button>
+<p>Update points: </p> <input name="points" type="text"> <button class="pointsEditBtn">Update</button>
+

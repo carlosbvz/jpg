@@ -20,7 +20,18 @@ const getPlayer = (requestUrl) => {
         });
 };
 
+/**
+ * Get a list of matches
+ */
+const getAllMatches = (requestUrl) => {
+    return fetchHelper.fetch(requestUrl)
+        .then(response => {
+            return response;
+        });
+};
+
 module.exports = {
     getAllPlayers,
-    getPlayer
+    getPlayer,
+    getAllMatches
 };

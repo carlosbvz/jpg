@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 /**
  * Player schema
  */
-const playerSchema = new mongoose.Schema({
+const matchSchema = new mongoose.Schema({
     date: {
         type: String,
         required: true
@@ -24,7 +24,7 @@ const playerSchema = new mongoose.Schema({
 /**
  * Methods
  */
-playerSchema.methods.sayName = () => {
+matchSchema.methods.sayName = () => {
     const greeting = this.name ? 'Meow name is ' + this.name : 'I dont have a name';
     console.log(greeting);
 };
@@ -33,4 +33,4 @@ playerSchema.methods.sayName = () => {
  * Statics
  */
 
-module.exports = mongoose.model('Player', playerSchema);
+module.exports = mongoose.model('Match', matchSchema);
