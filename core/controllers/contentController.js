@@ -54,17 +54,17 @@ const playersToolDelete = (req, res) => {
  */
 const matchesTool = (req, res) => {
 
-    const pageData = async () => {
-        const [players, matches] = await Promise.all([
-            contentService.getAllPlayers(`${config.contentService.baseUrl}/players`),
-            contentService.getAllMatches(`${config.contentService.baseUrl}/matches`)
-        ]);
+    // const pageData = async () => {
+    //     const [players, matches] = await Promise.all([
+    //         contentService.getAllPlayers(`${config.contentService.baseUrl}/players`),
+    //         contentService.getAllMatches(`${config.contentService.baseUrl}/matches`)
+    //     ]);
 
-        return {
-            players,
-            matches
-        };
-    };
+    //     return {
+    //         players,
+    //         matches
+    //     };
+    // };
 
     res.render('../app/pages/matches', { players: pageData().players, matches: pageData().matches });
 
